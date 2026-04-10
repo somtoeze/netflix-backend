@@ -1,31 +1,25 @@
 # Use official Maven image (has Java + Maven already)
-FROM maven:3.9.9-eclipse-temurin-17
+FROM Ubuntu
 
-# Set working directory
-WORKDIR /app
+   #intall  necessary packages
+   RUN apt-get update && apt-get get install -y
+   RUN apt install openjdk-17-jre headless -y
+   RUN apt install maven -y
 
-# Copy pom.xml first (for caching dependencies)
-COPY pom.xml .
+   #setting working directory
+   WORKDIR /app
 
-# Download dependencies
-RUN mvn dependency:go-offline
+   #copy all files to directory
+   COPY ./src /app/src
+   COPY ./pom.xml /app
 
-# Copy source code
-COPY src ./src
+   #build the application
+   RUN mvn -f  /app/pom.xml clean package -dskiptest
 
-# Build the application
-RUN mvn clean package -DskipTests
+   #copy the built jar file to the container
+   COPY ./target/*.jar /app/app.jar
 
-# Use lightweight JDK image to run app
-FROM eclipse-temurin:17-jdk-jammy
-
-WORKDIR /app
-
-# Copy built jar from previous stage
-COPY --from=0 /app/target/*.jar app.jar
-
-# Expose port
-EXPOSE 8080
+   Expose 8080
 
 # Run the app
 ENTRYPOINT ["java", "-jar", "app.jar"]

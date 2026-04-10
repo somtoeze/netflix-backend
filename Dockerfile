@@ -19,4 +19,4 @@ From Ubuntu
 
    Expose 8080
 
-   ENTRY POINT ["jar", "-jar, "app.jar"]
+  

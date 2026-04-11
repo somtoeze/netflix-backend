@@ -1,0 +1,17 @@
+name: Build and push docker imageon:  
+
+on:
+  push:     
+    branches: [ main ]  
+  
+    jobs: 
+      build and push:          
+         runs-on: ubuntu-latest  
+      
+      steps:     
+        -name: check out the repository      
+          uses: actions/checkout@v2   
+        
+        -name: Docker build       
+           run:            
+                hostnamectl

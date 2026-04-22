@@ -5,6 +5,11 @@ FROM ubuntu
 RUN apt-get update && apt-get install -y 
 RUN apt install openjdk-17-jre-headless -y
 RUN apt install maven -y
+# Build jar
+RUN mvn clean package -DskipTests
+
+# -----------------------
+FROM eclipse-temurin:17-jdk
 
 # Set the working directory
 WORKDIR /app
@@ -17,6 +22,7 @@ COPY ./pom.xml /app
 # Build the application
 RUN mvn -f /app/pom.xml clean package
 RUN ls -la /app/target
+
 
 COPY target/app.jar app.jar
 
